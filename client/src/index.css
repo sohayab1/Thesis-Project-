@@ -1,0 +1,12 @@
+/* index.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* you can also add global overrides here, e.g.: */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
