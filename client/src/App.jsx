@@ -13,7 +13,7 @@ export default function App() {
       {/* TODO: add a shared Header/Nav component here */}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/report" element={<Registration />} />
+        <Route path="/registration" element={<Registration />} />
         <Route path="/login" element={<Login />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />

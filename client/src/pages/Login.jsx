@@ -1,48 +1,75 @@
-import React, { useState } from 'react';
-import './Login.css';
+import { useState } from "react";
+import "./Login.css";
 
 export default function Login() {
-  const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCredentials({ ...credentials, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Logging in with:', credentials);
-    // Future: Add API integration here
+
+    try {
+      const res = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Login successful!");
+        console.log("User:", data.user);
+
+        // Optional: Store token for session
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        // Redirect or navigate to dashboard
+        // window.location.href = "/dashboard";
+      } else {
+        alert(data.msg || "Login failed");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Something went wrong. Try again.");
+    }
   };
 
   return (
-    <div className="login-container">
-      <div className="login-wrapper">
-        <h2 className="login-title">Login to Your Account</h2>
-        <form onSubmit={handleSubmit} className="login-form">
+    <div className="form-container">
+      <div className="form-wrapper">
+        <h2 className="form-title">Login</h2>
+        <form onSubmit={handleSubmit} className="form-grid">
           <input
-            type="email"
             name="email"
+            type="email"
             placeholder="Email Address"
             className="input-field"
-            value={credentials.email}
-            onChange={handleChange}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
           <input
-            type="password"
             name="password"
+            type="password"
             placeholder="Password"
             className="input-field"
-            value={credentials.password}
-            onChange={handleChange}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit" className="submit-button">Login</button>
+          <div className="full-span">
+            <button type="submit" className="submit-button">
+              LOG IN
+            </button>
+          </div>
         </form>
 
-        <div className="login-footer">
-          Don’t have an account? <a href="/report" className="signup-link">Register Here</a>
+        <div className="form-footer">
+          Don't have an account? <a href="/registration" className="login-link">Register Here</a>
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ function Home() {
       <header className="header">
         <h1 className="tagline">সাইবার অপরাধ সুরক্ষা</h1>
         <div className="button-group">
-          <Link to="/report">
+          <Link to="/registration">
             <button className="primary-button">Registration</button>
           </Link>
           <Link to="/login">
@@ -29,6 +29,9 @@ function Home() {
 
           <Link to="/contact">
             <button className="secondary-button">Contact</button>
+          </Link>
+           <Link to="/faq">
+            <button className="secondary-button">FAQ</button>
           </Link>
         </div>
       </main>

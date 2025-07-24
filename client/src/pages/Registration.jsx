@@ -2,7 +2,18 @@ import { useState } from 'react';
 import './Registration.css';
 
 export default function Registration() {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    nidNumber: '',
+    password: '',
+    confirmPassword: '',
+    nidFront: null,
+    nidBack: null,
+    selfie: null,
+  });
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -12,9 +23,37 @@ export default function Registration() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form Data Submitted:', formData);
+
+    if (formData.password !== formData.confirmPassword) {
+      alert("❌ Passwords do not match");
+      return;
+    }
+
+    const data = new FormData();
+    Object.keys(formData).forEach((key) => {
+      data.append(key, formData[key]);
+    });
+
+    try {
+      const res = await fetch("http://localhost:5000/api/register", {
+        method: "POST",
+        body: data,
+      });
+
+      const result = await res.json();
+      console.log("📦 Server Response:", result);
+
+      if (res.ok) {
+        alert("✅ Registration successful!");
+      } else {
+        alert(result.msg || "❌ Error submitting registration");
+      }
+    } catch (err) {
+      console.error("⚠️ Registration error:", err);
+      alert("❌ Error submitting registration");
+    }
   };
 
   return (
@@ -22,12 +61,11 @@ export default function Registration() {
       <div className="form-wrapper">
         <h2 className="form-title">User Registration</h2>
         <form onSubmit={handleSubmit} className="form-grid">
+
           <input name="firstName" type="text" placeholder="First Name" className="input-field" onChange={handleChange} required />
           <input name="lastName" type="text" placeholder="Last Name" className="input-field" onChange={handleChange} required />
-
           <input name="email" type="email" placeholder="Email Address" className="input-field" onChange={handleChange} required />
           <input name="phone" type="text" placeholder="Phone Number" className="input-field" onChange={handleChange} required />
-
           <input name="nidNumber" type="text" placeholder="NID Number" className="input-field" onChange={handleChange} required />
 
           <div className="file-wrapper">
